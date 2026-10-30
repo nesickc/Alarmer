@@ -1,0 +1,31 @@
+# Raw Telegram exports (~270 MB); a small curated sample gets committed separately for tests
+data/
+
+# Secrets: Telegram API keys and session (full account access), Firebase service account
+.env
+*.session
+*.session-journal
+secrets/
+*firebase-adminsdk*.json
+
+# Local LLM weights
+models/
+*.gguf
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Android / Gradle / IDE
+.gradle/
+build/
+local.properties
+*.iml
+.idea/
+.vscode/
+
+# OS
+Thumbs.db
+.DS_Store
