@@ -500,6 +500,8 @@ Ukrainian now; strings are externalised from day one.
 
 ## 11. Milestones
 
+The step-by-step plan to the MVP, with tasks and exit criteria, is in [plan.md](plan.md).
+
 | # | Deliverable |
 |---|---|
 | M0 | This spec + ADRs + README |
@@ -507,7 +509,7 @@ Ukrainian now; strings are externalised from day one.
 | M2 | Live PC pipeline: Telethon ingest (+ `@war_monitor`, `@air_alert_ua`), track fusion, FCM publisher, health status |
 | M3 | Phone app: FCM receive, level engine (§6), ongoing notification, phone-vibration fallback, settings, event log |
 | M4 | Watch app: per-level patterns, L4 full-screen + acknowledge, shelter mode, open-on-phone |
-| M5 | Calibration: explosion-vs-threat mining, ETA bands, per-type speeds, track lifetimes. Regional channel list + trust scores. |
+| M5 | Calibration: explosion-vs-threat mining, ETA bands, per-type speeds, track lifetimes (the Kharkiv part is the MVP field trial, plan Stage 5). Regional channel list + trust scores (after the MVP). |
 | Later | Map on phone; NEPTUN corroboration in fusion; per-oblast FCM topics if needed; second pipeline instance; SMS fallback; Google Play; partner data (§3.3) |
 
 ## 12. Open questions (decided during the MVP)

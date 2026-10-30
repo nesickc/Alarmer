@@ -1,12 +1,21 @@
 # Raw Telegram exports (~270 MB); a small curated sample gets committed separately for tests
 data/
 
-# Secrets: Telegram API keys and session (full account access), Firebase service account
+# Secrets: never commit these (see CLAUDE.md). Only placeholder templates like .env.example are tracked.
 .env
+.env.*
+!.env.example
 *.session
 *.session-journal
 secrets/
 *firebase-adminsdk*.json
+google-services.json
+*.jks
+*.keystore
+keystore.properties
+*.pem
+*.p12
+*.key
 
 # Local LLM weights
 models/
