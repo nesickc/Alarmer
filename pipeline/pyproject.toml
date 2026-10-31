@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling>=1.33"]
+build-backend = "hatchling.build"
+
+[project]
+name = "alarmer"
+version = "0.0.0"
+description = "Alarmer PC pipeline: turns monitoring-channel posts into target records"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.2",
+    "ruff==0.17.3",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["alarmer"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

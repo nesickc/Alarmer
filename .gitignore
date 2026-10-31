@@ -26,9 +26,12 @@ __pycache__/
 *.pyc
 .venv/
 .pytest_cache/
+.ruff_cache/
+*.egg-info/
 
 # Android / Gradle / IDE
 .gradle/
+.kotlin/
 build/
 local.properties
 *.iml

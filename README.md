@@ -8,7 +8,7 @@ matches the danger at *your* location.
 
 > ⚠️ **Not an official warning system.** Always follow official alerts and the instructions of the authorities.
 
-**Status:** specification phase, no code yet. See [docs/spec.md](docs/spec.md).
+**Status:** Stage 0 of the [plan](docs/plan.md): an empty skeleton that builds. See [docs/spec.md](docs/spec.md).
 
 ## How it works
 
@@ -34,9 +34,32 @@ Running cost: $0/month. Everything is self-hosted except push delivery (Firebase
 | [docs/plan.md](docs/plan.md) | Plan to the MVP |
 | [docs/adr/](docs/adr/README.md) | Architecture decision records |
 | [qna/](qna/) | Question rounds and research notes the spec was built from |
-| `pipeline/` | *(planned)* Python PC pipeline, replay harness, evals |
-| `android/` | *(planned)* Phone app and Wear OS app (Kotlin) |
+| [pipeline/](pipeline/) | Python PC pipeline, replay harness, evals |
+| [android/](android/) | Gradle project: `:shared` (record model, level engine), `:phone`, `:wear` |
+| [contracts/](contracts/README.md) | Record JSON Schema and golden level vectors, shared by Python and Kotlin tests |
 | `data/` | Raw Telegram exports, git-ignored |
+
+## Development
+
+CI runs on every PR: Python lint and tests, the Android build (lint and unit tests included), and a gitleaks secret
+scan.
+
+**Pipeline** (Python 3.12+), from `pipeline/`:
+
+```bash
+python -m venv .venv
+.venv/Scripts/python -m pip install -e ".[dev]"
+.venv/Scripts/ruff check . && .venv/Scripts/ruff format --check . && .venv/Scripts/pytest
+```
+
+On Linux and macOS the venv folder is `.venv/bin` instead of `.venv/Scripts`.
+
+**Android**, from `android/`, needs JDK 17+ (`JAVA_HOME`) and the Android SDK (`ANDROID_HOME`). The first build
+installs SDK platform 36 if it's missing.
+
+```bash
+./gradlew build
+```
 
 ## Roadmap
 
