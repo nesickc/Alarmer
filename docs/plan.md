@@ -82,7 +82,7 @@ that depends on it. The fallback for FCM is a foreground-service connection (ntf
 | 1.4 | **Eval set** (see below) | M | Eval v1 frozen, split into dev and test |
 | 1.5 | **Fast path:** rules from spec §4.3, tested against the eval set | M | Recall ≈100% on ballistic-class and `over` events; false-L4 rate reported |
 | 1.6 | **LLM extraction:** prompt, output schema (spec §4.4), context assembly (reply chain + last 10 channel messages + active tracks), llama-server client, priority queue | M | Runs end to end on the dev split |
-| 1.7 | **Model benchmark:** every candidate on the eval test split, reporting metrics, latency and VRAM | S | Model chosen and recorded in **ADR-0011** |
+| 1.7 | **Model benchmark:** every candidate on the eval test split, reporting metrics, latency and VRAM | S | Model chosen and recorded in **ADR-0012** |
 | 1.8 | **Track fusion v1:** merging, kinematics, expiry (spec §4.6) → records that validate against the contract | L | Replayed reply chains become single tracks with sensible headings |
 | 1.9 | **Level engine (Python reference)** + more golden vectors | M | All golden vectors pass; the vectors become the shared spec for the Kotlin port |
 | 1.10 | **Replay harness** (see below) | M | See stage exit |
@@ -115,7 +115,7 @@ real time.
 | 2.2 | **Parsers for `@war_monitor` and `@air_alert_ua`**, plus eval samples for both | S | Added to the eval set; thresholds still met |
 | 2.3 | **Official alert state + reason** (spec §6.5) | S | Replay shows L1 records with reasons |
 | 2.4 | **Publisher** (see below) | M | Test-topic messages reach the skeleton app from 0.4 |
-| 2.5 | **Run as a Windows service:** pipeline + `llama-server` start at boot and restart on crash (Task Scheduler or NSSM), log rotation, power settings | S | Survives reboot and a killed process; recorded in **ADR-0012** |
+| 2.5 | **Run as a Windows service:** pipeline + `llama-server` start at boot and restart on crash (Task Scheduler or NSSM), log rotation, power settings | S | Survives reboot and a killed process; recorded in **ADR-0013** |
 | 2.6 | **Health:** `alarmer status` (Telegram connection, last message per channel, LLM queue, latency p50/p95, FCM errors) | S | Shows a real outage when Wi-Fi is turned off |
 | 2.7 | **Latency instrumentation:** per-stage timestamps in every record (spec §9.5) | S | p50/p95 per stage visible in `status` and in replay reports |
 
@@ -213,9 +213,9 @@ qna/                 question rounds and research
 
 | ADR | When |
 |---|---|
-| 0011 — model choice | After 1.7 |
-| 0012 — Windows service hosting | 2.5 |
-| A Python reference level engine + shared golden vectors | 0.3; could be its own ADR, since it shapes testing on both tracks |
+| [0011](adr/0011-shared-contract-golden-vectors.md) — shared contract and golden vectors | 0.3 |
+| 0012 — model choice | After 1.7 |
+| 0013 — Windows service hosting | 2.5 |
 | Gazetteer data sources and IDs | 1.3, if it deviates from spec §4.5 |
 | A superseding ADR for FCM or the Data Layer | Only if spike 0.4 fails |
 

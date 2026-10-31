@@ -26,3 +26,4 @@ Each significant decision gets a short record: the context, what we decided, and
 | [0008](0008-wear-os-data-layer-watch-app.md) | Own Wear OS app over the Data Layer for watch alerts | Accepted |
 | [0009](0009-alert-levels-time-to-impact.md) | Alert levels come from time to impact; blunt rules for ballistic-class | Accepted |
 | [0010](0010-implementation-languages.md) | Python on the PC, Kotlin on phone and watch | Accepted |
+| [0011](0011-shared-contract-golden-vectors.md) | Share one contract: a strict record schema and golden level vectors | Accepted |

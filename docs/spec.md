@@ -215,14 +215,15 @@ errors. A local status page or CLI shows them.
 
 ## 5. Target record (wire format v1)
 
-[ADR-0006](adr/0006-target-record-wire-format.md)
+[ADR-0006](adr/0006-target-record-wire-format.md) · exact definition:
+[contracts/record.schema.json](../contracts/record.schema.json) ([ADR-0011](adr/0011-shared-contract-golden-vectors.md))
 
 ### 5.1 Envelope
 
 FCM data payload:
 `{"v":1, "seq":18342, "ts":"2026-10-30T21:14:05Z", "records":[ … ]}`
 
-Snapshots set `"snapshot":true` and carry every active record.
+Snapshots set `"snapshot":true` and carry every active record. A heartbeat is an envelope with an empty `records`.
 
 ### 5.2 Record
 
@@ -231,27 +232,30 @@ Snapshots set `"snapshot":true` and carry every active record.
  "type":"uav.geran_3", "count":1,
  "pos":{"lat":50.05, "lon":36.42, "r_km":5},
  "heading":{"deg":250, "pm":30}, "speed_kmh":400,
- "dest":{"id":"UA63120270010096220", "lat":49.99, "lon":36.23},
+ "dest":{"id":"UA63120270010096220", "lat":49.99, "lon":36.23, "r_km":12},
  "area":null, "launch_area":null,
  "no_threat_to":null, "reason":null,
- "conf":0.7, "src_n":2, "first_seen":"…", "last_seen":"…", "ttl_s":600}
+ "conf":0.7, "src_n":2, "first_seen":"2026-10-30T21:09:40Z", "last_seen":"2026-10-30T21:14:02Z", "ttl_s":600}
 ```
 
 | Field | Meaning |
 |---|---|
 | `kind` | `track` (moving object) · `area` (e.g. "КАБи на північ Харківщини") · `ballistic_threat` (no launch yet) · `launch` (ballistic-class launch) · `explosion` · `official_alert` · `all_clear` |
+| `id` | Stable for the life of a track or area; updates reuse it |
 | `status` | `active` · `destroyed` · `left` · `expired` |
-| `type` | §5.3 taxonomy |
-| `pos` / `area` | A point with uncertainty radius, or gazetteer IDs of the affected areas (oblast/raion/hromada/neighbourhood) |
+| `type` | §5.3 taxonomy. Required for `track`, `area`, `ballistic_threat` and `launch`. A `launch` always has a ballistic-class type (§6.3) and a `track` never does. |
+| `pos` | A point with uncertainty radius. Every `track` has one. |
+| `area` | Gazetteer IDs of the affected areas (oblast/raion/hromada/district/neighbourhood). Required for `area`, `explosion`, `official_alert` and `all_clear`. On a track, the areas it is reported over (`над Салтівкою`). |
 | `heading`, `speed_kmh` | Degrees ± spread; speed estimate (falls back to the type default) |
-| `dest` | Stated destination (`курсом на X`, `на X`) with coordinates inline |
+| `dest` | Stated destination (`курсом на X`, `на X`) or a launch's named target, with coordinates and radius inline |
 | `launch_area` | Launch-area ID for ballistic-class threats and launches |
-| `no_threat_to` | Gazetteer ID a local channel declared safe ("для нас без загрози") |
-| `reason` | `official_alert` only: the threat behind the alert, taken from the Air Force posts of the same minutes |
+| `no_threat_to` | Gazetteer IDs a local channel declared safe ("для нас без загрози") |
+| `reason` | `official_alert` only: the threat behind the alert (`kind`, `type`, `launch_area`), taken from the Air Force posts of the same minutes |
 | `conf`, `src_n` | Fused confidence 0–1; number of independent sources |
+| `first_seen`, `last_seen` | UTC timestamps with a `Z` suffix, like every time in the format |
 | `ttl_s` | The phone drops the record after this unless it is refreshed |
 
-The phone never receives raw post text in v1.
+Optional fields may be omitted or `null`; both mean "not known". The phone never receives raw post text in v1.
 
 ### 5.3 Type taxonomy
 
@@ -263,7 +267,8 @@ Adopted from war-monitor, plus additions:
 
 ## 6. Threat model and alert levels (phone side)
 
-[ADR-0009](adr/0009-alert-levels-time-to-impact.md)
+[ADR-0009](adr/0009-alert-levels-time-to-impact.md) · worked examples: [contracts/golden/](../contracts/golden/README.md),
+which both level engines must pass ([ADR-0011](adr/0011-shared-contract-golden-vectors.md))
 
 ### 6.1 Levels
 

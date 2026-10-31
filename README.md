@@ -8,7 +8,8 @@ matches the danger at *your* location.
 
 > ⚠️ **Not an official warning system.** Always follow official alerts and the instructions of the authorities.
 
-**Status:** Stage 0 of the [plan](docs/plan.md): an empty skeleton that builds. See [docs/spec.md](docs/spec.md).
+**Status:** Stage 0 of the [plan](docs/plan.md): a skeleton that builds, plus the
+[contract](contracts/README.md) both sides test against. See [docs/spec.md](docs/spec.md).
 
 ## How it works
 

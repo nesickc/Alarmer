@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nesickc/alarmer/blob/main/contracts/record.schema.json",
+  "title": "Alarmer FCM envelope, wire format v1",
+  "description": "One FCM data message from the PC pipeline (docs/spec.md §5). Strict on purpose: the pipeline must not emit anything this schema doesn't allow. The phone ignores fields it doesn't know (contracts/README.md). Optional fields may be omitted or null; both mean 'not known'.",
+  "type": "object",
+  "required": ["v", "seq", "ts", "records"],
+  "additionalProperties": false,
+  "properties": {
+    "v": {"const": 1, "description": "Wire format version"},
+    "seq": {"type": "integer", "minimum": 0, "description": "Monotonic per pipeline instance; gaps tell the phone it missed messages"},
+    "ts": {"$ref": "#/$defs/timestamp", "description": "When the message was sent"},
+    "snapshot": {"type": "boolean", "description": "true: records holds every active record, and anything else the phone has can be dropped"},
+    "records": {"type": "array", "items": {"$ref": "#/$defs/record"}, "description": "Empty in a heartbeat"}
+  },
+  "$defs": {
+    "timestamp": {
+      "description": "UTC, always with a Z suffix",
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?Z$"
+    },
+    "areaId": {
+      "description": "Gazetteer ID: a КАТОТТГ code where one exists (spec §4.5), else a gazetteer-assigned ID",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]{1,40}$"
+    },
+    "areaIds": {"type": "array", "items": {"$ref": "#/$defs/areaId"}, "minItems": 1, "uniqueItems": true},
+    "lat": {"type": "number", "minimum": -90, "maximum": 90},
+    "lon": {"type": "number", "minimum": -180, "maximum": 180},
+    "circle": {
+      "description": "A point with an uncertainty radius",
+      "type": "object",
+      "required": ["lat", "lon", "r_km"],
+      "additionalProperties": false,
+      "properties": {
+        "lat": {"$ref": "#/$defs/lat"},
+        "lon": {"$ref": "#/$defs/lon"},
+        "r_km": {"type": "number", "minimum": 0}
+      }
+    },
+    "place": {
+      "description": "A named place with its coordinates inline, so the phone needs no lookup",
+      "type": "object",
+      "required": ["id", "lat", "lon", "r_km"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"anyOf": [{"$ref": "#/$defs/areaId"}, {"type": "null"}]},
+        "lat": {"$ref": "#/$defs/lat"},
+        "lon": {"$ref": "#/$defs/lon"},
+        "r_km": {"type": "number", "minimum": 0}
+      }
+    },
+    "heading": {
+      "type": "object",
+      "required": ["deg", "pm"],
+      "additionalProperties": false,
+      "properties": {
+        "deg": {"type": "number", "minimum": 0, "exclusiveMaximum": 360, "description": "Compass bearing of travel"},
+        "pm": {"type": "number", "minimum": 0, "maximum": 180, "description": "± spread in degrees"}
+      }
+    },
+    "kind": {"enum": ["track", "area", "ballistic_threat", "launch", "explosion", "official_alert", "all_clear"]},
+    "type": {
+      "description": "Type taxonomy, spec §5.3",
+      "enum": [
+        "uav.geran_2", "uav.geran_3", "uav.geran_4", "uav.gerbera", "uav.garpia", "uav.molnia", "uav.kub",
+        "uav.lancet", "uav.recon", "uav.unknown",
+        "cruise.kh101", "cruise.kh55", "cruise.kh59", "cruise.kh69", "cruise.kh22", "cruise.kh31p", "cruise.kh35",
+        "cruise.kalibr", "cruise.iskander_k", "cruise.oniks", "cruise.tsirkon", "cruise.banderol", "cruise.unknown",
+        "ballistic.iskander_m", "ballistic.kn23", "ballistic.kinzhal", "ballistic.5v55", "ballistic.48n6dm",
+        "ballistic.oreshnik", "ballistic.unknown",
+        "kab", "aviation.tactical", "aviation.mig31k", "unknown.fast", "unknown"
+      ]
+    },
+    "ballisticClassType": {
+      "description": "Ballistic-class types, spec §6.3",
+      "enum": [
+        "ballistic.iskander_m", "ballistic.kn23", "ballistic.kinzhal", "ballistic.5v55", "ballistic.48n6dm",
+        "ballistic.oreshnik", "ballistic.unknown", "cruise.tsirkon", "unknown.fast"
+      ]
+    },
+    "reason": {
+      "description": "The threat behind an official alert",
+      "type": "object",
+      "required": ["kind"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"enum": ["track", "area", "ballistic_threat", "launch"]},
+        "type": {"anyOf": [{"$ref": "#/$defs/type"}, {"type": "null"}]},
+        "launch_area": {"anyOf": [{"$ref": "#/$defs/areaId"}, {"type": "null"}]}
+      }
+    },
+    "record": {
+      "description": "A target record, spec §5.2",
+      "type": "object",
+      "required": ["kind", "id", "status", "conf", "src_n", "first_seen", "last_seen", "ttl_s"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"$ref": "#/$defs/kind"},
+        "id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,32}$", "description": "Stable across updates of the same track or area"},
+        "status": {"enum": ["active", "destroyed", "left", "expired"]},
+        "type": {"anyOf": [{"$ref": "#/$defs/type"}, {"type": "null"}]},
+        "count": {"type": ["integer", "null"], "minimum": 1},
+        "pos": {"anyOf": [{"$ref": "#/$defs/circle"}, {"type": "null"}]},
+        "heading": {"anyOf": [{"$ref": "#/$defs/heading"}, {"type": "null"}]},
+        "speed_kmh": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "dest": {"anyOf": [{"$ref": "#/$defs/place"}, {"type": "null"}], "description": "Stated destination or named target"},
+        "area": {"anyOf": [{"$ref": "#/$defs/areaIds"}, {"type": "null"}], "description": "Areas the record is about; for a track, the areas it is reported over"},
+        "launch_area": {"anyOf": [{"$ref": "#/$defs/areaId"}, {"type": "null"}]},
+        "no_threat_to": {"anyOf": [{"$ref": "#/$defs/areaIds"}, {"type": "null"}], "description": "Areas a local channel declared safe"},
+        "reason": {"anyOf": [{"$ref": "#/$defs/reason"}, {"type": "null"}]},
+        "conf": {"type": "number", "minimum": 0, "maximum": 1},
+        "src_n": {"type": "integer", "minimum": 1},
+        "first_seen": {"$ref": "#/$defs/timestamp"},
+        "last_seen": {"$ref": "#/$defs/timestamp"},
+        "ttl_s": {"type": "integer", "minimum": 1}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"kind": {"const": "track"}}},
+          "then": {
+            "required": ["type", "pos"],
+            "properties": {
+              "type": {"$ref": "#/$defs/type", "not": {"$ref": "#/$defs/ballisticClassType"}},
+              "pos": {"$ref": "#/$defs/circle"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"kind": {"const": "area"}}},
+          "then": {
+            "required": ["type", "area"],
+            "properties": {"type": {"$ref": "#/$defs/type"}, "area": {"$ref": "#/$defs/areaIds"}}
+          }
+        },
+        {
+          "if": {"properties": {"kind": {"const": "ballistic_threat"}}},
+          "then": {
+            "required": ["type"],
+            "properties": {"type": {"anyOf": [{"$ref": "#/$defs/ballisticClassType"}, {"const": "aviation.mig31k"}]}}
+          }
+        },
+        {
+          "if": {"properties": {"kind": {"const": "launch"}}},
+          "then": {"required": ["type"], "properties": {"type": {"$ref": "#/$defs/ballisticClassType"}}}
+        },
+        {
+          "if": {"properties": {"kind": {"enum": ["explosion", "official_alert", "all_clear"]}}},
+          "then": {"required": ["area"], "properties": {"area": {"$ref": "#/$defs/areaIds"}}}
+        },
+        {
+          "if": {"properties": {"kind": {"not": {"const": "official_alert"}}}},
+          "then": {"properties": {"reason": {"type": "null"}}}
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "description": "Spec §6.5: official alerts, explosion reports and all-clears.",
+  "vectors": [
+    {
+      "id": "official-alert-oblast-l1",
+      "rules": ["official.alert"],
+      "description": "Official alert for the user's oblast, with its reason («Тривога · ☄️ загроза балістики») → L1.",
+      "user": "saltivka",
+      "record": {
+        "kind": "official_alert", "id": "o-alr-01", "status": "active", "area": ["oblast.kharkiv"],
+        "reason": {"kind": "ballistic_threat", "type": "ballistic.unknown"},
+        "conf": 1.0, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 3600
+      },
+      "expect": {"level": "L1"}
+    },
+    {
+      "id": "official-alert-other-oblast-l0",
+      "rules": ["official.alert"],
+      "description": "Official alert for another oblast → L0.",
+      "user": "saltivka",
+      "record": {
+        "kind": "official_alert", "id": "o-alr-02", "status": "active", "area": ["oblast.lviv"],
+        "reason": {"kind": "track", "type": "uav.geran_2"},
+        "conf": 1.0, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 3600
+      },
+      "expect": {"level": "L0"}
+    },
+    {
+      "id": "explosion-neighbourhood-l2",
+      "rules": ["explosion.local"],
+      "description": "«Вибух на Салтівці»: an explosion in the user's neighbourhood → L2.",
+      "user": "saltivka",
+      "record": {
+        "kind": "explosion", "id": "e-01", "status": "active", "area": ["nbhd.saltivka"],
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "explosion-city-l1",
+      "rules": ["explosion.city"],
+      "description": "«Вибухи в Харкові»: an explosion in the user's city, no finer place → L1.",
+      "user": "saltivka",
+      "record": {
+        "kind": "explosion", "id": "e-02", "status": "active", "area": ["hromada.kharkiv"],
+        "conf": 0.8, "src_n": 2, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L1"}
+    },
+    {
+      "id": "explosion-other-district-l1",
+      "rules": ["explosion.city"],
+      "description": "An explosion in another district of the user's city. Interpretation: it counts as the user's city → L1.",
+      "user": "saltivka",
+      "record": {
+        "kind": "explosion", "id": "e-03", "status": "active", "area": ["district.kholodnohirskyi"],
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L1"}
+    },
+    {
+      "id": "explosion-neighbour-hromada-l0",
+      "rules": ["explosion.none"],
+      "description": "An explosion in a neighbouring hromada: §6.5 gives levels only for the user's neighbourhood, district and city → L0.",
+      "user": "saltivka",
+      "record": {
+        "kind": "explosion", "id": "e-04", "status": "active", "area": ["hromada.derhachi"],
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L0"}
+    },
+    {
+      "id": "all-clear-oblast",
+      "rules": ["all_clear"],
+      "description": "«Відбій» for the user's oblast → the all-clear pattern.",
+      "user": "saltivka",
+      "record": {
+        "kind": "all_clear", "id": "c-01", "status": "active", "area": ["oblast.kharkiv"],
+        "conf": 1.0, "src_n": 1, "first_seen": "2026-10-30T21:44:05Z", "last_seen": "2026-10-30T21:44:05Z", "ttl_s": 300
+      },
+      "expect": {"level": "all_clear"}
+    },
+    {
+      "id": "all-clear-other-oblast-l0",
+      "rules": ["all_clear"],
+      "description": "«Відбій» for another oblast → nothing for this user (L0).",
+      "user": "saltivka",
+      "record": {
+        "kind": "all_clear", "id": "c-02", "status": "active", "area": ["oblast.lviv"],
+        "conf": 1.0, "src_n": 1, "first_seen": "2026-10-30T21:44:05Z", "last_seen": "2026-10-30T21:44:05Z", "ttl_s": 300
+      },
+      "expect": {"level": "L0"}
+    }
+  ]
+}

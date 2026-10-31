@@ -1,0 +1,15 @@
+{
+  "v": 1, "seq": 18342, "ts": "2026-10-30T21:14:05Z",
+  "records": [
+    {
+      "kind": "track", "id": "t-7f3a", "status": "active",
+      "type": "uav.geran_3", "count": 1,
+      "pos": {"lat": 50.05, "lon": 36.42, "r_km": 5},
+      "heading": {"deg": 250, "pm": 30}, "speed_kmh": 400,
+      "dest": {"id": "UA63120270010096220", "lat": 49.99, "lon": 36.23, "r_km": 12},
+      "area": null, "launch_area": null,
+      "no_threat_to": null, "reason": null,
+      "conf": 0.7, "src_n": 2, "first_seen": "2026-10-30T21:09:40Z", "last_seen": "2026-10-30T21:14:02Z", "ttl_s": 600
+    }
+  ]
+}

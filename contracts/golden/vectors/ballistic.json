@@ -1,0 +1,211 @@
+{
+  "description": "Spec §6.3: ballistic-class threats and launches (ballistic.*, Zircon, unknown fast targets) use blunt rules instead of ETA. Distances are to the fixture launch areas in world.json.",
+  "vectors": [
+    {
+      "id": "threat-bryansk-saltivka-l2",
+      "rules": ["ballistic.threat"],
+      "description": "«Загроза балістики з Брянська»: Kharkiv is 381 km from Bryansk, within 550 km → L2.",
+      "user": "saltivka",
+      "record": {
+        "kind": "ballistic_threat", "id": "b-thr-01", "status": "active", "type": "ballistic.unknown",
+        "launch_area": "launch.bryansk",
+        "conf": 0.9, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 900
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "threat-bryansk-lviv-l0",
+      "rules": ["ballistic.out_of_range"],
+      "description": "The same threat from Bryansk for a user in Lviv, 808 km away → L0.",
+      "user": "lviv",
+      "record": {
+        "kind": "ballistic_threat", "id": "b-thr-01", "status": "active", "type": "ballistic.unknown",
+        "launch_area": "launch.bryansk",
+        "conf": 0.9, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 900
+      },
+      "expect": {"level": "L0"}
+    },
+    {
+      "id": "threat-no-area-saltivka-l2",
+      "rules": ["ballistic.threat", "ballistic.fallback"],
+      "description": "«☄️ Загроза застосування балістичного озброєння з півночі», no launch area: measured from the Russian border + occupied territory, 32 km from the user → L2.",
+      "user": "saltivka",
+      "record": {
+        "kind": "ballistic_threat", "id": "b-thr-02", "status": "active", "type": "ballistic.unknown",
+        "conf": 0.9, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 900
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "threat-no-area-lviv-l0",
+      "rules": ["ballistic.fallback", "ballistic.out_of_range"],
+      "description": "The same threat with no launch area for a user in Lviv, 609 km from the border + occupied territory → L0.",
+      "user": "lviv",
+      "record": {
+        "kind": "ballistic_threat", "id": "b-thr-02", "status": "active", "type": "ballistic.unknown",
+        "conf": 0.9, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 900
+      },
+      "expect": {"level": "L0"}
+    },
+    {
+      "id": "mig31k-lviv-l2",
+      "rules": ["ballistic.mig31k"],
+      "description": "MiG-31K take-off: L2 nationwide, even in Lviv.",
+      "user": "lviv",
+      "record": {
+        "kind": "ballistic_threat", "id": "b-thr-03", "status": "active", "type": "aviation.mig31k", "count": 1,
+        "conf": 0.9, "src_n": 2, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 1800
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "launch-belgorod-saltivka-l4",
+      "rules": ["ballistic.launch"],
+      "description": "Iskander-M launch from Belgorod, no target named: Kharkiv is 64 km away, within 550 km → L4.",
+      "user": "saltivka",
+      "record": {
+        "kind": "launch", "id": "b-lch-01", "status": "active", "type": "ballistic.iskander_m", "count": 1,
+        "launch_area": "launch.belgorod",
+        "conf": 0.9, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 180
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "launch-belgorod-kyiv-l4",
+      "rules": ["ballistic.launch"],
+      "description": "The same launch for a user in Kyiv, 429 km from Belgorod: still within 550 km → L4. Blunt by design.",
+      "user": "kyiv",
+      "record": {
+        "kind": "launch", "id": "b-lch-01", "status": "active", "type": "ballistic.iskander_m", "count": 1,
+        "launch_area": "launch.belgorod",
+        "conf": 0.9, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 180
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "launch-no-area-saltivka-l4",
+      "rules": ["ballistic.launch", "ballistic.fallback"],
+      "description": "Ballistic launch with neither launch area nor target: measured from the border + occupied territory, 32 km from the user → L4.",
+      "user": "saltivka",
+      "record": {
+        "kind": "launch", "id": "b-lch-02", "status": "active", "type": "ballistic.unknown",
+        "conf": 0.9, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 180
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "launch-on-kharkiv-saltivka-l4",
+      "rules": ["ballistic.target"],
+      "description": "«Балістика на Харків» from Belgorod: the user is 11 km from the target's centre, within 50 km → L4.",
+      "user": "saltivka",
+      "record": {
+        "kind": "launch", "id": "b-lch-03", "status": "active", "type": "ballistic.iskander_m", "count": 2,
+        "launch_area": "launch.belgorod",
+        "dest": {"id": "hromada.kharkiv", "lat": 49.993, "lon": 36.230, "r_km": 12},
+        "conf": 0.9, "src_n": 2, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 180
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "launch-on-kharkiv-berestyn-l4",
+      "rules": ["ballistic.corridor"],
+      "description": "The same launch for a user in Berestyn, 89 km past Kharkiv. From Belgorod, Kharkiv lies at 200.9° and Berestyn at 211.2°, 10.3° off the axis. Berestyn is 159 km out, inside the corridor's 72 + 150 = 222 km → L4.",
+      "user": "berestyn",
+      "record": {
+        "kind": "launch", "id": "b-lch-03", "status": "active", "type": "ballistic.iskander_m", "count": 2,
+        "launch_area": "launch.belgorod",
+        "dest": {"id": "hromada.kharkiv", "lat": 49.993, "lon": 36.230, "r_km": 12},
+        "conf": 0.9, "src_n": 2, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 180
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "launch-on-kharkiv-dnipro-l2",
+      "rules": ["ballistic.in_range", "ballistic.corridor"],
+      "description": "The same launch for a user in Dnipro: only 4.8° off the axis, but 262 km from Belgorod, past the corridor's 222 km end. Within 550 km of the launch area → L2.",
+      "user": "dnipro",
+      "record": {
+        "kind": "launch", "id": "b-lch-03", "status": "active", "type": "ballistic.iskander_m", "count": 2,
+        "launch_area": "launch.belgorod",
+        "dest": {"id": "hromada.kharkiv", "lat": 49.993, "lon": 36.230, "r_km": 12},
+        "conf": 0.9, "src_n": 2, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 180
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "tsirkon-on-kyiv-kyiv-l4",
+      "rules": ["ballistic.target", "ballistic.class"],
+      "description": "Zircon from Crimea «на Київ»: Zircon is ballistic-class; the user is at the target → L4. Interpretation: the target circle and the corridor aren't limited to 550 km of the launch area (Kyiv is 531 km from the fixture Crimea).",
+      "user": "kyiv",
+      "record": {
+        "kind": "launch", "id": "b-lch-04", "status": "active", "type": "cruise.tsirkon", "count": 1,
+        "launch_area": "launch.crimea",
+        "dest": {"id": "oblast.kyiv_city", "lat": 50.450, "lon": 30.523, "r_km": 15},
+        "conf": 0.9, "src_n": 2, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 180
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "tsirkon-on-kyiv-vinnytsia-l4",
+      "rules": ["ballistic.corridor", "ballistic.class"],
+      "description": "The spec's real case: a Zircon called for Kyiv that struck Vinnytsia. From Sevastopol, Kyiv lies at 341.9° and Vinnytsia at 325.0°, 16.9° off the axis. Vinnytsia is 641 km out, inside the corridor's 687 + 150 = 837 km → L4.",
+      "user": "vinnytsia",
+      "record": {
+        "kind": "launch", "id": "b-lch-04", "status": "active", "type": "cruise.tsirkon", "count": 1,
+        "launch_area": "launch.crimea",
+        "dest": {"id": "oblast.kyiv_city", "lat": 50.450, "lon": 30.523, "r_km": 15},
+        "conf": 0.9, "src_n": 2, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 180
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "tsirkon-on-kyiv-saltivka-l2",
+      "rules": ["ballistic.in_range"],
+      "description": "The same Zircon for a user in Kharkiv: 36.5° off the axis, so outside the corridor; 453 km from Crimea, within 550 km → L2.",
+      "user": "saltivka",
+      "record": {
+        "kind": "launch", "id": "b-lch-04", "status": "active", "type": "cruise.tsirkon", "count": 1,
+        "launch_area": "launch.crimea",
+        "dest": {"id": "oblast.kyiv_city", "lat": 50.450, "lon": 30.523, "r_km": 15},
+        "conf": 0.9, "src_n": 2, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 180
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "fast-target-on-dnipro-l4",
+      "rules": ["ballistic.target", "ballistic.class"],
+      "description": "«Швидкісна ціль на Дніпро», no launch area: an unknown fast target is ballistic-class; the user is at the target → L4.",
+      "user": "dnipro",
+      "record": {
+        "kind": "launch", "id": "b-lch-05", "status": "active", "type": "unknown.fast", "count": 1,
+        "dest": {"id": null, "lat": 48.465, "lon": 35.046, "r_km": 12},
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 180
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "launch-no-threat-saltivka-l2",
+      "rules": ["ballistic.no_threat"],
+      "description": "Launch from Belgorod, no target, and Kharkiv Life says «для нас без загрози» for Kharkiv: L4 drops to L2 for that city.",
+      "user": "saltivka",
+      "record": {
+        "kind": "launch", "id": "b-lch-06", "status": "active", "type": "ballistic.iskander_m", "count": 1,
+        "launch_area": "launch.belgorod", "no_threat_to": ["hromada.kharkiv"],
+        "conf": 0.9, "src_n": 2, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:20Z", "ttl_s": 180
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "launch-no-threat-berestyn-l4",
+      "rules": ["ballistic.no_threat", "ballistic.launch"],
+      "description": "The same launch for a user in Berestyn: «без загрози» covers only Kharkiv, so Berestyn, 159 km from Belgorod, stays at L4.",
+      "user": "berestyn",
+      "record": {
+        "kind": "launch", "id": "b-lch-06", "status": "active", "type": "ballistic.iskander_m", "count": 1,
+        "launch_area": "launch.belgorod", "no_threat_to": ["hromada.kharkiv"],
+        "conf": 0.9, "src_n": 2, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:20Z", "ttl_s": 180
+      },
+      "expect": {"level": "L4"}
+    }
+  ]
+}
