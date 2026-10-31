@@ -31,6 +31,7 @@ Running cost: $0/month. Everything is self-hosted except push delivery (Firebase
 | Path | Contents |
 |---|---|
 | [docs/spec.md](docs/spec.md) | The specification |
+| [docs/plan.md](docs/plan.md) | Plan to the MVP |
 | [docs/adr/](docs/adr/README.md) | Architecture decision records |
 | [qna/](qna/) | Question rounds and research notes the spec was built from |
 | `pipeline/` | *(planned)* Python PC pipeline, replay harness, evals |
@@ -40,7 +41,14 @@ Running cost: $0/month. Everything is self-hosted except push delivery (Firebase
 ## Roadmap
 
 M1 parser + replay harness · M2 live PC pipeline · M3 phone app · M4 watch app · M5 calibration and regional
-channels. Details are in [spec §11](docs/spec.md#11-milestones).
+channels. Details are in [spec §11](docs/spec.md#11-milestones), and the step-by-step plan to the MVP is in
+[docs/plan.md](docs/plan.md).
+
+## Secrets
+
+**Never commit API keys, passwords or authentication data.** This repository is public. Secrets live in git-ignored
+files (`pipeline/.env`, `secrets/`), and only placeholder templates get committed. The full rule, including what to do
+if a secret leaks, is in [CLAUDE.md](CLAUDE.md#never-put-secrets-in-the-repository).
 
 ## Attribution
 
