@@ -16,6 +16,8 @@ A change here changes what both sides must do, so it lands in the same PR as the
 
 * **The schema is strict for the producer.** It allows no unknown fields, requires each kind's fields and accepts only
   UTC timestamps. Everything the pipeline publishes must validate.
+* **Types aren't tied to kinds.** Any type may appear in a `track`, `area`, `ballistic_threat` or `launch`, so a Kh-22
+  launch or a ballistic missile with a known position needs no schema change. The kind picks the level rule.
 * **The phone is tolerant.** It ignores fields it doesn't know and treats an unknown `type` as its class's `.unknown`
   (or `unknown`), so an older app keeps working with a newer pipeline.
 * **When `v` changes.** Adding an optional field or a new type keeps `v`. Removing a field, making it required, or

@@ -50,7 +50,7 @@
     {
       "id": "explosion-other-district-l1",
       "rules": ["explosion.city"],
-      "description": "An explosion in another district of the user's city. Interpretation: it counts as the user's city → L1.",
+      "description": "An explosion in another district of the user's city counts as the user's city → L1.",
       "user": "saltivka",
       "record": {
         "kind": "explosion", "id": "e-03", "status": "active", "area": ["district.kholodnohirskyi"],

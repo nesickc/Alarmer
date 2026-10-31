@@ -93,9 +93,8 @@ INVALID_CHANGES = {
     "empty area list": {"area": []},
     "dest without radius": {"dest": {"id": None, "lat": 49.99, "lon": 36.23}},
     "track without position": {"pos": None},
-    "track of a ballistic type": {"type": "ballistic.iskander_m"},
+    "launch without type": {"kind": "launch", "type": None},
     "reason on a track": {"reason": {"kind": "track"}},
-    "launch of a cruise missile": {"kind": "launch", "type": "cruise.kh101"},
     "official alert without area": {"kind": "official_alert"},
 }
 
@@ -103,6 +102,19 @@ INVALID_CHANGES = {
 @pytest.mark.parametrize("change", INVALID_CHANGES.values(), ids=INVALID_CHANGES.keys())
 def test_invalid_record_is_rejected(change):
     assert errors(RECORD, VALID_TRACK | change)
+
+
+# Types aren't tied to kinds (ADR-0011): a new fast weapon's launch, or a ballistic missile with a known position.
+VALID_CHANGES = {
+    "track of a ballistic missile": {"type": "ballistic.iskander_m"},
+    "launch of a cruise missile": {"kind": "launch", "type": "cruise.kh22"},
+    "threat of a cruise missile": {"kind": "ballistic_threat", "type": "cruise.kh22"},
+}
+
+
+@pytest.mark.parametrize("change", VALID_CHANGES.values(), ids=VALID_CHANGES.keys())
+def test_any_type_goes_with_any_typed_kind(change):
+    assert errors(RECORD, VALID_TRACK | change) == []
 
 
 # --- Golden vectors and their fixtures --------------------------------------------------------------------------

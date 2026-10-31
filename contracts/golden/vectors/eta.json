@@ -52,7 +52,7 @@
     {
       "id": "eta-shahed-70km-approaching-l1",
       "rules": ["eta.oblast"],
-      "description": "Shahed 70 km south, heading at the user: 68 km at 180 km/h ≈ 23 min, outside every band. It is in the user's oblast → L1 (interpretation: the L1 row covers anything in the oblast that no band catches).",
+      "description": "Shahed 70 km south, heading at the user: 68 km at 180 km/h ≈ 23 min, outside every band. No band catches it, but it is in the user's oblast → L1.",
       "user": "saltivka",
       "record": {
         "kind": "track", "id": "t-eta-05", "status": "active", "type": "uav.geran_2", "count": 1,
@@ -111,8 +111,8 @@
     },
     {
       "id": "eta-kh22-400km-l2",
-      "rules": ["eta.l2", "speed.kh22", "ballistic.class"],
-      "description": "Kh-22 400 km away over the Sea of Azov, heading at the user: 395 km at 3600 km/h ≈ 6.6 min → L2. Kh-22 is not ballistic-class, so it follows ETA rather than the blunt §6.3 rules.",
+      "rules": ["eta.l2", "speed.kh22"],
+      "description": "Kh-22 400 km away over the Sea of Azov, heading at the user: 395 km at 3600 km/h ≈ 6.6 min → L2. As a track it follows ETA; a Kh-22 launch record gets §6.3 instead (launch-kh22-bryansk-saltivka-l4).",
       "user": "saltivka",
       "record": {
         "kind": "track", "id": "t-eta-10", "status": "active", "type": "cruise.kh22", "count": 1,
@@ -120,6 +120,30 @@
         "conf": 0.7, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 300
       },
       "expect": {"level": "L2"}
+    },
+    {
+      "id": "eta-iskander-track-150km-l4",
+      "rules": ["eta.l4", "speed.ballistic"],
+      "description": "An Iskander-M with a known position, as military data might give one day: 150 km north-east, heading at the user. 145 km at 6000 km/h ≈ 1.5 min → L4. A tracked ballistic missile follows ETA, not §6.3.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-18", "status": "active", "type": "ballistic.iskander_m", "count": 1,
+        "pos": {"lat": 51.065, "lon": 37.740, "r_km": 5}, "heading": {"deg": 221, "pm": 10},
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 120
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "eta-tsirkon-track-400km-l3",
+      "rules": ["eta.l3", "speed.ballistic"],
+      "description": "A tracked Zircon 400 km south-south-west, heading at the user: 390 km at 6000 km/h ≈ 3.9 min → L3. Its exact-type speed beats cruise.*; at 800 km/h it would be 29 min away and outside the oblast → L0.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-19", "status": "active", "type": "cruise.tsirkon", "count": 1,
+        "pos": {"lat": 46.645, "lon": 34.569, "r_km": 10}, "heading": {"deg": 19, "pm": 10},
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 120
+      },
+      "expect": {"level": "L3"}
     },
     {
       "id": "eta-record-speed-l3",

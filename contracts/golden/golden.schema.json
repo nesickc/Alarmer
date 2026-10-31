@@ -36,10 +36,11 @@
       "enum": [
         "eta.l4", "eta.l3", "eta.l2", "eta.over", "eta.over_ladder", "eta.oblast", "eta.none",
         "approach.cone", "approach.spread", "approach.dest",
-        "speed.slow_uav", "speed.jet_uav", "speed.cruise", "speed.banderol", "speed.kh22", "speed.record",
+        "speed.slow_uav", "speed.jet_uav", "speed.cruise", "speed.banderol", "speed.kh22", "speed.ballistic",
+        "speed.record",
         "ballistic.threat", "ballistic.fallback", "ballistic.mig31k", "ballistic.launch", "ballistic.target",
         "ballistic.corridor", "ballistic.in_range", "ballistic.out_of_range", "ballistic.no_threat",
-        "ballistic.class",
+        "ballistic.any_type",
         "area.local", "area.hromada", "area.raion", "area.neighbour", "area.oblast", "area.none",
         "area.other_type",
         "official.alert", "explosion.local", "explosion.city", "explosion.none", "all_clear",
@@ -179,12 +180,11 @@
         "ballistic": {
           "type": "object",
           "required": [
-            "class_types", "nationwide_threat_types", "range_km", "fallback_launch_area", "target_radius_km",
+            "nationwide_threat_types", "range_km", "fallback_launch_area", "target_radius_km",
             "corridor_half_angle_deg", "corridor_beyond_target_km"
           ],
           "additionalProperties": false,
           "properties": {
-            "class_types": {"type": "array", "items": {"type": "string"}},
             "nationwide_threat_types": {"type": "array", "items": {"type": "string"}},
             "range_km": {"type": "number", "exclusiveMinimum": 0},
             "fallback_launch_area": {"$ref": "#/$defs/id"},

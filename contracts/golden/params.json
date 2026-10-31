@@ -6,6 +6,9 @@
     "cruise.*": 800,
     "cruise.banderol": 600,
     "cruise.kh22": 3600,
+    "cruise.tsirkon": 6000,
+    "ballistic.*": 6000,
+    "unknown.fast": 6000,
     "*": 800
   },
   "eta": {
@@ -14,7 +17,6 @@
     "dest_margin_km": 10
   },
   "ballistic": {
-    "class_types": ["ballistic.*", "cruise.tsirkon", "unknown.fast"],
     "nationwide_threat_types": ["aviation.mig31k"],
     "range_km": 550,
     "fallback_launch_area": "launch.border_occupied",

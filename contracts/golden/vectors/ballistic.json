@@ -1,5 +1,5 @@
 {
-  "description": "Spec §6.3: ballistic-class threats and launches (ballistic.*, Zircon, unknown fast targets) use blunt rules instead of ETA. Distances are to the fixture launch areas in world.json.",
+  "description": "Spec §6.3: threats and launches use blunt rules instead of ETA, whatever the weapon type. Distances are to the fixture launch areas in world.json.",
   "vectors": [
     {
       "id": "threat-bryansk-saltivka-l2",
@@ -133,9 +133,21 @@
       "expect": {"level": "L2"}
     },
     {
+      "id": "launch-on-kharkiv-no-area-berestyn-l2",
+      "rules": ["ballistic.corridor", "ballistic.fallback", "ballistic.in_range"],
+      "description": "«Балістика на Харків» with no launch area, for a user in Berestyn: the fallback area has no origin, so there is no corridor (compare launch-on-kharkiv-berestyn-l4). Berestyn is 77 km from the target circle, beyond 50 km, and 115 km from the border + occupied territory → L2.",
+      "user": "berestyn",
+      "record": {
+        "kind": "launch", "id": "b-lch-07", "status": "active", "type": "ballistic.iskander_m", "count": 1,
+        "dest": {"id": "hromada.kharkiv", "lat": 49.993, "lon": 36.230, "r_km": 12},
+        "conf": 0.9, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 180
+      },
+      "expect": {"level": "L2"}
+    },
+    {
       "id": "tsirkon-on-kyiv-kyiv-l4",
-      "rules": ["ballistic.target", "ballistic.class"],
-      "description": "Zircon from Crimea «на Київ»: Zircon is ballistic-class; the user is at the target → L4. Interpretation: the target circle and the corridor aren't limited to 550 km of the launch area (Kyiv is 531 km from the fixture Crimea).",
+      "rules": ["ballistic.target"],
+      "description": "Zircon from Crimea «на Київ»: the user is at the target → L4. The target circle and the corridor aren't limited to 550 km of the launch area (Kyiv is 531 km from the fixture Crimea).",
       "user": "kyiv",
       "record": {
         "kind": "launch", "id": "b-lch-04", "status": "active", "type": "cruise.tsirkon", "count": 1,
@@ -147,7 +159,7 @@
     },
     {
       "id": "tsirkon-on-kyiv-vinnytsia-l4",
-      "rules": ["ballistic.corridor", "ballistic.class"],
+      "rules": ["ballistic.corridor"],
       "description": "The spec's real case: a Zircon called for Kyiv that struck Vinnytsia. From Sevastopol, Kyiv lies at 341.9° and Vinnytsia at 325.0°, 16.9° off the axis. Vinnytsia is 641 km out, inside the corridor's 687 + 150 = 837 km → L4.",
       "user": "vinnytsia",
       "record": {
@@ -173,8 +185,8 @@
     },
     {
       "id": "fast-target-on-dnipro-l4",
-      "rules": ["ballistic.target", "ballistic.class"],
-      "description": "«Швидкісна ціль на Дніпро», no launch area: an unknown fast target is ballistic-class; the user is at the target → L4.",
+      "rules": ["ballistic.target", "ballistic.fallback"],
+      "description": "«Швидкісна ціль на Дніпро», no launch area: the user is at the target → L4.",
       "user": "dnipro",
       "record": {
         "kind": "launch", "id": "b-lch-05", "status": "active", "type": "unknown.fast", "count": 1,
@@ -182,6 +194,30 @@
         "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 180
       },
       "expect": {"level": "L4"}
+    },
+    {
+      "id": "launch-kh22-bryansk-saltivka-l4",
+      "rules": ["ballistic.launch", "ballistic.any_type"],
+      "description": "«Пуски Х-22» from the Bryansk area, no target named. A Kh-22 isn't ballistic-class, but a launch record gets the launch rules whatever its type: Kharkiv is 381 km away, within 550 km → L4.",
+      "user": "saltivka",
+      "record": {
+        "kind": "launch", "id": "b-lch-08", "status": "active", "type": "cruise.kh22", "count": 2,
+        "launch_area": "launch.bryansk",
+        "conf": 0.9, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 300
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "threat-kh22-bryansk-lviv-l0",
+      "rules": ["ballistic.out_of_range", "ballistic.any_type"],
+      "description": "A Kh-22 threat from Bryansk gets the threat rules too: Lviv is 808 km away, beyond 550 km → L0.",
+      "user": "lviv",
+      "record": {
+        "kind": "ballistic_threat", "id": "b-thr-04", "status": "active", "type": "cruise.kh22",
+        "launch_area": "launch.bryansk",
+        "conf": 0.9, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 900
+      },
+      "expect": {"level": "L0"}
     },
     {
       "id": "launch-no-threat-saltivka-l2",

@@ -37,7 +37,7 @@
     {
       "id": "kab-on-other-district-l3",
       "rules": ["area.hromada"],
-      "description": "«КАБ на Холодну Гору»: another district of the user's city. Interpretation: an area inside the user's hromada but outside their own district or neighbourhood counts as the hromada → L3.",
+      "description": "«КАБ на Холодну Гору»: another district of the user's city. An area inside the user's hromada but outside their own district or neighbourhood counts as the hromada → L3.",
       "user": "saltivka",
       "record": {
         "kind": "area", "id": "a-kab-04", "status": "active", "type": "kab", "area": ["district.kholodnohirskyi"],

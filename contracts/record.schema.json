@@ -73,13 +73,6 @@
         "kab", "aviation.tactical", "aviation.mig31k", "unknown.fast", "unknown"
       ]
     },
-    "ballisticClassType": {
-      "description": "Ballistic-class types, spec §6.3",
-      "enum": [
-        "ballistic.iskander_m", "ballistic.kn23", "ballistic.kinzhal", "ballistic.5v55", "ballistic.48n6dm",
-        "ballistic.oreshnik", "ballistic.unknown", "cruise.tsirkon", "unknown.fast"
-      ]
-    },
     "reason": {
       "description": "The threat behind an official alert",
       "type": "object",
@@ -118,35 +111,15 @@
       },
       "allOf": [
         {
+          "if": {"properties": {"kind": {"enum": ["track", "area", "ballistic_threat", "launch"]}}},
+          "then": {"required": ["type"], "properties": {"type": {"$ref": "#/$defs/type"}}}
+        },
+        {
           "if": {"properties": {"kind": {"const": "track"}}},
-          "then": {
-            "required": ["type", "pos"],
-            "properties": {
-              "type": {"$ref": "#/$defs/type", "not": {"$ref": "#/$defs/ballisticClassType"}},
-              "pos": {"$ref": "#/$defs/circle"}
-            }
-          }
+          "then": {"required": ["pos"], "properties": {"pos": {"$ref": "#/$defs/circle"}}}
         },
         {
-          "if": {"properties": {"kind": {"const": "area"}}},
-          "then": {
-            "required": ["type", "area"],
-            "properties": {"type": {"$ref": "#/$defs/type"}, "area": {"$ref": "#/$defs/areaIds"}}
-          }
-        },
-        {
-          "if": {"properties": {"kind": {"const": "ballistic_threat"}}},
-          "then": {
-            "required": ["type"],
-            "properties": {"type": {"anyOf": [{"$ref": "#/$defs/ballisticClassType"}, {"const": "aviation.mig31k"}]}}
-          }
-        },
-        {
-          "if": {"properties": {"kind": {"const": "launch"}}},
-          "then": {"required": ["type"], "properties": {"type": {"$ref": "#/$defs/ballisticClassType"}}}
-        },
-        {
-          "if": {"properties": {"kind": {"enum": ["explosion", "official_alert", "all_clear"]}}},
+          "if": {"properties": {"kind": {"enum": ["area", "explosion", "official_alert", "all_clear"]}}},
           "then": {"required": ["area"], "properties": {"area": {"$ref": "#/$defs/areaIds"}}}
         },
         {

@@ -43,7 +43,8 @@ and no state: each record is judged on its own, as of its `last_seen`.
 
 A record with several areas takes the highest.
 
-**Rules by kind.** Whatever the kind, a record whose `status` isn't `active` gives L0.
+**Rules by kind.** The kind picks the rule; the type only picks a speed or a nationwide threat. Whatever the kind, a
+record whose `status` isn't `active` gives L0.
 
 * **`track`.** The level is the highest of:
   * the ETA band, if approaching. Speed is `speed_kmh`, else `params.speed_kmh` (exact type, then `class.*`, then
@@ -53,38 +54,19 @@ A record with several areas takes the highest.
   * the area ladder over the track's `area` (`над <place>`);
   * L1 if the track is in the user's oblast: the `pos` centre lies in the oblast's polygon, or an `area` is inside it.
 * **`area`.** The area ladder over `area`.
-* **`ballistic_threat`.** `aviation.mig31k` gives L2 anywhere. Otherwise L2 within 550 km of the `launch_area`, or of
+* **`ballistic_threat`**, whatever its type. A type in `params.ballistic.nationwide_threat_types`
+  (`aviation.mig31k`) gives L2 anywhere. Otherwise L2 within 550 km of the `launch_area`, or of
   the fallback launch area (`params.ballistic.fallback_launch_area`) when there is none. Beyond that, L0.
-* **`launch`.**
+* **`launch`**, whatever its type.
   * Without a `dest`: L4 within 550 km of the launch area (same fallback).
   * With a `dest`, L4 in either of two places. One is within 50 km of the `dest` circle. The other is the vector
     corridor: from the launch area's `origin`, the user's bearing is within ±20° of the bearing to the target, and
-    the user is no farther than the target's distance + 150 km. Elsewhere it is L2 within 550 km, else L0. A launch
-    area without an `origin` (the fallback) has no corridor.
+    the user is no farther than the target's distance + 150 km. Both reach beyond 550 km. Elsewhere it is L2 within
+    550 km, else L0. A launch area without an `origin` (the fallback) has no corridor.
   * If `no_threat_to` contains one of the user's areas, the level is capped at L2.
 * **`explosion`.** In the user's neighbourhood or district: L2. In the user's hromada: L1. Anything else: L0.
 * **`official_alert`.** If `area` contains one of the user's areas: L1, else L0.
 * **`all_clear`.** If `area` contains one of the user's areas: `all_clear`, else L0.
-
-## Interpretations to confirm
-
-Where §6 is silent or ambiguous, the vectors take a position, and the vector's description says so. Once you confirm
-one, the spec absorbs it. If you reject one, the vector changes.
-
-1. **A track's `area` gets the area ladder** (`eta-over-city-l3`). «Шахед над Харковом» for a user in Kharkiv is L3,
-   where ETA rules alone would give L1.
-2. **The L1 row covers anything in the user's oblast** that no band catches, including an approaching threat that is
-   still too far (`eta-shahed-70km-approaching-l1`).
-3. **A KAB on the user's own raion is L2** (`kab-on-own-raion-l2`).
-4. **Another district of the user's city counts as the city.** It gives L3 for a KAB and L1 for an explosion
-   (`kab-on-other-district-l3`, `explosion-other-district-l1`).
-5. **The ballistic target circle and corridor reach beyond 550 km** of the launch area (`tsirkon-on-kyiv-kyiv-l4`).
-6. **A named target with no known launch area gets the 50 km circle but no corridor.** No vector yet; the rule is the
-   same as the fallback having no `origin`.
-7. **Distances to `dest` and targets are measured to the circle's edge**, the same as the ETA formula.
-8. **`no_threat_to` caps a launch at L2 but never raises it.**
-9. **Types without a speed in the spec** (`unknown`, `aviation.*`, `kab` as a track) default to 800 km/h. Erring
-   fast means alerts come earlier, not later.
 
 ## Rules
 
@@ -96,8 +78,8 @@ Every rule below has at least one vector; a test enforces it.
 | `eta.l3` | §6.2 | Approaching, ETA ≤ 5 min → L3 |
 | `eta.l2` | §6.2 | Approaching, ETA ≤ 15 min → L2 |
 | `eta.over` | §6.2 | Over the user's neighbourhood or district → L4 |
-| `eta.over_ladder` | — | Over another area: the area ladder (interpretation 1) |
-| `eta.oblast` | §6.2 | In the user's oblast, no band → L1 |
+| `eta.over_ladder` | §6.2 | Over another area: the area ladder |
+| `eta.oblast` | §6.2 | In the user's oblast, no band reached → L1 |
 | `eta.none` | §6.2 | Anything else → L0 |
 | `approach.cone` | §6.2 | Heading cone at its minimum ±25° |
 | `approach.spread` | §6.2 | A spread over 25° widens the cone |
@@ -107,6 +89,7 @@ Every rule below has at least one vector; a test enforces it.
 | `speed.cruise` | §6.2 | `cruise.*` at 800 km/h |
 | `speed.banderol` | §6.2 | `cruise.banderol` at 600 km/h |
 | `speed.kh22` | §6.2 | `cruise.kh22` at 3600 km/h (≈ Mach 3) |
+| `speed.ballistic` | §6.2 | Ballistic-class types as tracks at 6000 km/h (≈ Mach 5) |
 | `speed.record` | §5.2 | A record's `speed_kmh` beats the type default |
 | `ballistic.threat` | §6.3 | Threat → L2 within 550 km of the launch area |
 | `ballistic.fallback` | §6.3 | No launch area: measured from the Russian border + occupied territory |
@@ -116,11 +99,11 @@ Every rule below has at least one vector; a test enforces it.
 | `ballistic.corridor` | §6.3 | Launch with a target → L4 in the ±20° corridor up to target + 150 km |
 | `ballistic.in_range` | §6.3 | Launch with a target → L2 elsewhere within 550 km |
 | `ballistic.out_of_range` | §6.3 | Beyond 550 km → L0 |
-| `ballistic.no_threat` | §6.3 | «Для нас без загрози» → L2 for that city |
-| `ballistic.class` | §6.3 | Zircon and unknown fast targets are ballistic-class; Kh-22 isn't |
+| `ballistic.no_threat` | §6.3 | «Для нас без загрози» → at most L2 for that city |
+| `ballistic.any_type` | §6.3 | Threats and launches get these rules whatever the type, e.g. a Kh-22 |
 | `area.local` | §6.4 | KAB on the user's district or neighbourhood → L4 |
 | `area.hromada` | §6.4 | KAB on the user's hromada → L3 |
-| `area.raion` | — | KAB on the user's raion → L2 (interpretation 3) |
+| `area.raion` | §6.4 | KAB on the user's raion → L2 |
 | `area.neighbour` | §6.4 | KAB on a neighbouring hromada → L2 |
 | `area.oblast` | §6.4 | KAB elsewhere in the oblast → L1 |
 | `area.none` | §6.4 | KAB in another oblast → L0 |

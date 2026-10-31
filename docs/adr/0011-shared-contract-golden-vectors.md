@@ -22,6 +22,12 @@
     unknown fields, per-kind required fields, UTC timestamps. Everything the pipeline publishes must validate.
   * `golden/`: **stateless vectors**. Each takes a record and a user location and gives the expected level. Vectors
     run in a small fixture world (areas, launch areas, users) with a parameter file holding the spec §6 values.
+* **Types aren't tied to kinds.** Any type may appear in a `track`, `area`, `ballistic_threat` or `launch`, and the
+  kind, not the type, picks the level rule. Threats and launches get the blunt rules of
+  [0009](0009-alert-levels-time-to-impact.md) whatever the weapon. Tracks get ETA, with a default speed for
+  ballistic-class types too. A new fast weapon's launches, or a ballistic missile tracked from military data some day,
+  then need no schema change. [0009](0009-alert-levels-time-to-impact.md) assumed ballistic-class weapons only arrive
+  as threats and launches; its rules stand for those.
 * Both engines run every vector in CI. Each vector is tagged with the spec §6 rules it exercises, and a test fails if
   any rule has no vector.
 * Vectors use the fixture world, not the real gazetteer, so they test rules rather than data. The gazetteer gets its
@@ -52,3 +58,5 @@
   data-level contract is simpler than code generation.
 * **A tolerant schema that allows extra fields.** Typos and stray fields from the pipeline would pass unnoticed.
   Tolerance belongs in the phone's parser instead.
+* **Types tied to kinds** (a `launch` must be ballistic-class, a `track` must not). It would catch some pipeline
+  mix-ups, but it rejects the launch of any other fast weapon and a ballistic missile with a known position.
