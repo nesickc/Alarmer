@@ -215,14 +215,15 @@ errors. A local status page or CLI shows them.
 
 ## 5. Target record (wire format v1)
 
-[ADR-0006](adr/0006-target-record-wire-format.md)
+[ADR-0006](adr/0006-target-record-wire-format.md) · exact definition:
+[contracts/record.schema.json](../contracts/record.schema.json) ([ADR-0011](adr/0011-shared-contract-golden-vectors.md))
 
 ### 5.1 Envelope
 
 FCM data payload:
 `{"v":1, "seq":18342, "ts":"2026-10-30T21:14:05Z", "records":[ … ]}`
 
-Snapshots set `"snapshot":true` and carry every active record.
+Snapshots set `"snapshot":true` and carry every active record. A heartbeat is an envelope with an empty `records`.
 
 ### 5.2 Record
 
@@ -231,27 +232,30 @@ Snapshots set `"snapshot":true` and carry every active record.
  "type":"uav.geran_3", "count":1,
  "pos":{"lat":50.05, "lon":36.42, "r_km":5},
  "heading":{"deg":250, "pm":30}, "speed_kmh":400,
- "dest":{"id":"UA63120270010096220", "lat":49.99, "lon":36.23},
+ "dest":{"id":"UA63120270010096220", "lat":49.99, "lon":36.23, "r_km":12},
  "area":null, "launch_area":null,
  "no_threat_to":null, "reason":null,
- "conf":0.7, "src_n":2, "first_seen":"…", "last_seen":"…", "ttl_s":600}
+ "conf":0.7, "src_n":2, "first_seen":"2026-10-30T21:09:40Z", "last_seen":"2026-10-30T21:14:02Z", "ttl_s":600}
 ```
 
 | Field | Meaning |
 |---|---|
-| `kind` | `track` (moving object) · `area` (e.g. "КАБи на північ Харківщини") · `ballistic_threat` (no launch yet) · `launch` (ballistic-class launch) · `explosion` · `official_alert` · `all_clear` |
+| `kind` | `track` (moving object) · `area` (e.g. "КАБи на північ Харківщини") · `ballistic_threat` (no launch yet) · `launch` (launch seen, target if named) · `explosion` · `official_alert` · `all_clear` |
+| `id` | Stable for the life of a track or area; updates reuse it |
 | `status` | `active` · `destroyed` · `left` · `expired` |
-| `type` | §5.3 taxonomy |
-| `pos` / `area` | A point with uncertainty radius, or gazetteer IDs of the affected areas (oblast/raion/hromada/neighbourhood) |
+| `type` | §5.3 taxonomy. Required for `track`, `area`, `ballistic_threat` and `launch`. Any type goes with any of these kinds: a Kh-22 launch is a `launch`, and a ballistic missile with a known position is a `track` (§6.3). |
+| `pos` | A point with uncertainty radius. Every `track` has one. |
+| `area` | Gazetteer IDs of the affected areas (oblast/raion/hromada/district/neighbourhood). Required for `area`, `explosion`, `official_alert` and `all_clear`. On a track, the areas it is reported over (`над Салтівкою`). |
 | `heading`, `speed_kmh` | Degrees ± spread; speed estimate (falls back to the type default) |
-| `dest` | Stated destination (`курсом на X`, `на X`) with coordinates inline |
-| `launch_area` | Launch-area ID for ballistic-class threats and launches |
-| `no_threat_to` | Gazetteer ID a local channel declared safe ("для нас без загрози") |
-| `reason` | `official_alert` only: the threat behind the alert, taken from the Air Force posts of the same minutes |
+| `dest` | Stated destination (`курсом на X`, `на X`) or a launch's named target, with coordinates and radius inline |
+| `launch_area` | Launch-area ID for threats and launches |
+| `no_threat_to` | Gazetteer IDs a local channel declared safe ("для нас без загрози") |
+| `reason` | `official_alert` only: the threat behind the alert (`kind`, `type`, `launch_area`), taken from the Air Force posts of the same minutes |
 | `conf`, `src_n` | Fused confidence 0–1; number of independent sources |
+| `first_seen`, `last_seen` | UTC timestamps with a `Z` suffix, like every time in the format |
 | `ttl_s` | The phone drops the record after this unless it is refreshed |
 
-The phone never receives raw post text in v1.
+Optional fields may be omitted or `null`; both mean "not known". The phone never receives raw post text in v1.
 
 ### 5.3 Type taxonomy
 
@@ -263,7 +267,8 @@ Adopted from war-monitor, plus additions:
 
 ## 6. Threat model and alert levels (phone side)
 
-[ADR-0009](adr/0009-alert-levels-time-to-impact.md)
+[ADR-0009](adr/0009-alert-levels-time-to-impact.md) · worked examples: [contracts/golden/](../contracts/golden/README.md),
+which both level engines must pass ([ADR-0011](adr/0011-shared-contract-golden-vectors.md))
 
 ### 6.1 Levels
 
@@ -295,10 +300,13 @@ between a Geran-2 and a Zircon.
   | ≤ 2 min, or `над <user's neighbourhood/district>` | L4 |
   | ≤ 5 min | L3 |
   | ≤ 15 min | L2 |
-  | In the user's oblast, not approaching | L1 |
+  | In the user's oblast, no band reached (including approaching but still too far) | L1 |
   | Anything else | L0 |
 
-* **Default speeds** (initial values, to be calibrated):
+* **`над <place>`** elsewhere follows the §6.4 ladder: over the user's city L3, over their raion or a neighbouring
+  hromada L2, elsewhere in their oblast L1. The track takes the higher of that and its ETA band.
+* **Default speeds** (initial values, to be calibrated). A record's own `speed_kmh` beats them. They err fast, so
+  alerts come early rather than late.
 
   | Class | Types | Default speed |
   |---|---|---|
@@ -306,28 +314,37 @@ between a Geran-2 and a Zircon.
   | Jet UAV | `uav.geran_3` | 350 km/h (peaks 500+) |
   | Cruise | `cruise.banderol` | 600 km/h |
   | Cruise | other `cruise.*` | 800 km/h |
-  | Fast cruise | `cruise.kh22` | ≈ Mach 3+, ETA-based |
-  | Ballistic-class | §6.3 | Rule-based, not ETA |
-  | KAB | `kab` | Area-based (§6.4) |
+  | Fast cruise | `cruise.kh22` | 3600 km/h (≈ Mach 3) |
+  | Ballistic-class | §6.3, when tracked | 6000 km/h (≈ Mach 5) |
+  | Everything else | `kab`, `aviation.*`, `unknown` | 800 km/h |
 
-### 6.3 Ballistic-class rule
+  KABs usually arrive as area threats (§6.4), and ballistic-class weapons as threats and launches (§6.3).
 
-**Ballistic-class** covers `ballistic.*` (Iskander-M and Kinzhal alike), `cruise.tsirkon`, and `unknown.fast`
-("Швидкісна ціль" of unknown type). Banderol and Kh-22 are *not* in this class; they follow the ETA rules. These targets
-are too fast for judgement, so the rules are deliberately blunt:
+### 6.3 Threats and launches
+
+`ballistic_threat` and `launch` records get deliberately blunt rules instead of ETA, whatever their type. They mostly
+carry **ballistic-class** weapons: `ballistic.*` (Iskander-M and Kinzhal alike), `cruise.tsirkon`, and `unknown.fast`
+("Швидкісна ціль" of unknown type). These are too fast for judgement.
+
+* **Other fast weapons** get the same rules when the pipeline reports their launch, e.g. `Пуски Х-22`. Banderol and
+  Kh-22 aren't ballistic-class, so as tracks they follow ETA. Because the rules are this blunt, launches of slow weapons
+  (Shaheds leaving Kursk) are reported as tracks, not launches.
+* **A tracked ballistic-class weapon**, with a known position and heading (e.g. from military data some day), follows
+  the ETA rules of §6.2 like any track.
 
 | Situation | Level |
 |---|---|
 | **Threat** (no launch yet), e.g. `☄️ Загроза застосування балістичного озброєння з півночі`, `Загроза балістики з Брянська`, or a MiG-31K take-off | **L2** within 550 km of the stated launch area. If no area is stated, within 550 km of the Russian border + occupied territory. A MiG-31K take-off is L2 nationwide. |
 | **Launch, no target named** | **L4** within 550 km of the launch area (same fallback) |
-| **Launch, target named** (`Балістика на Київ`, `Ракета на Харків`) | **L4** within 50 km of the target, and **L4** in the **vector corridor**; **L2** for everyone else in range |
-| A local channel says "для нас без загрози" for a city | **L2** for that city |
+| **Launch, target named** (`Балістика на Київ`, `Ракета на Харків`) | **L4** within 50 km of the edge of the target's circle, and **L4** in the **vector corridor**, both even beyond 550 km; **L2** for everyone else in range |
+| A local channel says "для нас без загрози" for a city | At most **L2** for that city; it never raises a level |
 
 * **Vector corridor.** Fast targets are a threat along their whole path. Targets get re-predicted in flight: a Zircon
   first called for Kyiv struck Vinnytsia two minutes later. The corridor runs from the launch area along the bearing to
   the named target, ±20°, out to the target plus 150 km.
   * From Sevastopol, Kyiv lies at a bearing of ≈342° and Vinnytsia at ≈325°. A ±20° corridor would have covered that
     case.
+  * The corridor needs a known launch area. A target named with no launch area gets only the 50 km circle.
 * **Belarus is excluded.** Kinzhals launched from Crimea count as their own launch area ("Крим").
 
 ### 6.4 Area threats
@@ -335,17 +352,18 @@ are too fast for judgement, so the rules are deliberately blunt:
 | Situation | Level |
 |---|---|
 | `КАБ на <user's district/neighbourhood>` | L4 |
-| `КАБ на <user's hromada/city>` | L3 |
-| KAB on a neighbouring hromada | L2 |
+| `КАБ на <user's hromada/city>`, including another district of the city | L3 |
+| KAB on the user's raion, or on a neighbouring hromada | L2 |
 | KAB elsewhere in the oblast | L1 |
 
-Other area-only threats follow the same ladder.
+Other area-only threats follow the same ladder, and so does a track reported `над <place>` (§6.2).
 
 ### 6.5 Official alert, explosions, all-clear
 
 * **Official alert** for the user's area starts → **L1**, with its reason ("Тривога · ☄️ загроза балістики з
   півночі"). This is the lowest buzzing tier. Alarmer never suppresses or downgrades anything the official alert says.
-* **Explosion reported** in the user's neighbourhood or district → L2; in the user's city → L1.
+* **Explosion reported** in the user's neighbourhood or district → L2; elsewhere in the user's city, another district
+  included → L1.
 * **All-clear** for the user's area, or the last relevant track ends → the all-clear pattern.
 
 ### 6.6 Repeats and upgrades

@@ -1,0 +1,247 @@
+{
+  "description": "Spec §6.2: ordinary threats, levelled by time to impact at the user's location. Distances and ETAs in the descriptions are rounded.",
+  "vectors": [
+    {
+      "id": "eta-shahed-5km-l4",
+      "rules": ["eta.l4", "speed.slow_uav", "approach.cone"],
+      "description": "Shahed 5 km north of the user, flying straight at them: (5 − 1) km at 180 km/h ≈ 1.3 min → L4.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-01", "status": "active", "type": "uav.geran_2", "count": 1,
+        "pos": {"lat": 50.085, "lon": 36.360, "r_km": 1}, "heading": {"deg": 180, "pm": 20},
+        "conf": 0.8, "src_n": 2, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "eta-shahed-13km-l3",
+      "rules": ["eta.l3", "speed.slow_uav", "approach.cone"],
+      "description": "Shahed 13 km north-east, heading at the user: 12 km at 180 km/h = 4.0 min → L3.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-02", "status": "active", "type": "uav.geran_2", "count": 1,
+        "pos": {"lat": 50.123, "lon": 36.489, "r_km": 1}, "heading": {"deg": 225, "pm": 20},
+        "conf": 0.8, "src_n": 2, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L3"}
+    },
+    {
+      "id": "eta-shahed-35km-l2",
+      "rules": ["eta.l2", "speed.slow_uav", "approach.cone"],
+      "description": "Shahed 35 km east, heading at the user: 33 km at 180 km/h = 11 min → L2.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-03", "status": "active", "type": "uav.geran_2", "count": 2,
+        "pos": {"lat": 50.039, "lon": 36.850, "r_km": 2}, "heading": {"deg": 270, "pm": 20},
+        "conf": 0.7, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "eta-shahed-heading-away-l1",
+      "rules": ["eta.oblast", "approach.cone"],
+      "description": "Same Shahed 35 km east, but flying away from the user: not approaching, still in the user's oblast → L1.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-04", "status": "active", "type": "uav.geran_2", "count": 2,
+        "pos": {"lat": 50.039, "lon": 36.850, "r_km": 2}, "heading": {"deg": 90, "pm": 20},
+        "conf": 0.7, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L1"}
+    },
+    {
+      "id": "eta-shahed-70km-approaching-l1",
+      "rules": ["eta.oblast"],
+      "description": "Shahed 70 km south, heading at the user: 68 km at 180 km/h ≈ 23 min, outside every band. No band catches it, but it is in the user's oblast → L1.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-05", "status": "active", "type": "uav.geran_2", "count": 1,
+        "pos": {"lat": 49.410, "lon": 36.360, "r_km": 2}, "heading": {"deg": 0, "pm": 20},
+        "conf": 0.7, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L1"}
+    },
+    {
+      "id": "eta-shahed-other-oblast-l0",
+      "rules": ["eta.none"],
+      "description": "Shahed 110 km west, outside the user's oblast, heading at the user: 108 km at 180 km/h = 36 min → L0.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-06", "status": "active", "type": "uav.geran_2", "count": 1,
+        "pos": {"lat": 50.030, "lon": 34.820, "r_km": 2}, "heading": {"deg": 89, "pm": 20},
+        "conf": 0.7, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L0"}
+    },
+    {
+      "id": "eta-jet-shahed-20km-l3",
+      "rules": ["eta.l3", "speed.jet_uav"],
+      "description": "Jet Shahed (Geran-3) 20 km north-east, heading at the user: 19 km at 350 km/h ≈ 3.3 min → L3. A Geran-2 here would be 6.3 min, L2.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-07", "status": "active", "type": "uav.geran_3", "count": 1,
+        "pos": {"lat": 50.196, "lon": 36.500, "r_km": 1}, "heading": {"deg": 210, "pm": 20},
+        "conf": 0.8, "src_n": 2, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L3"}
+    },
+    {
+      "id": "eta-kh101-63km-l3",
+      "rules": ["eta.l3", "speed.cruise"],
+      "description": "Kh-101 63 km south-east, heading at the user: 58 km at 800 km/h ≈ 4.4 min → L3.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-08", "status": "active", "type": "cruise.kh101", "count": 1,
+        "pos": {"lat": 49.638, "lon": 36.979, "r_km": 5}, "heading": {"deg": 315, "pm": 15},
+        "conf": 0.7, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 300
+      },
+      "expect": {"level": "L3"}
+    },
+    {
+      "id": "eta-banderol-63km-l2",
+      "rules": ["eta.l2", "speed.banderol"],
+      "description": "Banderol at the same spot as the Kh-101: 58 km at 600 km/h ≈ 5.8 min → L2.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-09", "status": "active", "type": "cruise.banderol", "count": 1,
+        "pos": {"lat": 49.638, "lon": 36.979, "r_km": 5}, "heading": {"deg": 315, "pm": 15},
+        "conf": 0.7, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 300
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "eta-kh22-400km-l2",
+      "rules": ["eta.l2", "speed.kh22"],
+      "description": "Kh-22 400 km away over the Sea of Azov, heading at the user: 395 km at 3600 km/h ≈ 6.6 min → L2. As a track it follows ETA; a Kh-22 launch record gets §6.3 instead (launch-kh22-bryansk-saltivka-l4).",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-10", "status": "active", "type": "cruise.kh22", "count": 1,
+        "pos": {"lat": 46.645, "lon": 38.151, "r_km": 5}, "heading": {"deg": 341, "pm": 10},
+        "conf": 0.7, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 300
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "eta-iskander-track-150km-l4",
+      "rules": ["eta.l4", "speed.ballistic"],
+      "description": "An Iskander-M with a known position, as military data might give one day: 150 km north-east, heading at the user. 145 km at 6000 km/h ≈ 1.5 min → L4. A tracked ballistic missile follows ETA, not §6.3.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-18", "status": "active", "type": "ballistic.iskander_m", "count": 1,
+        "pos": {"lat": 51.065, "lon": 37.740, "r_km": 5}, "heading": {"deg": 221, "pm": 10},
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 120
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "eta-tsirkon-track-400km-l3",
+      "rules": ["eta.l3", "speed.ballistic"],
+      "description": "A tracked Zircon 400 km south-south-west, heading at the user: 390 km at 6000 km/h ≈ 3.9 min → L3. Its exact-type speed beats cruise.*; at 800 km/h it would be 29 min away and outside the oblast → L0.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-19", "status": "active", "type": "cruise.tsirkon", "count": 1,
+        "pos": {"lat": 46.645, "lon": 34.569, "r_km": 10}, "heading": {"deg": 19, "pm": 10},
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 120
+      },
+      "expect": {"level": "L3"}
+    },
+    {
+      "id": "eta-record-speed-l3",
+      "rules": ["eta.l3", "speed.record"],
+      "description": "UAV of unknown type 30 km north-east, with a measured 600 km/h: 28 km at 600 km/h = 2.8 min → L3. The record's speed wins over the type default (180 km/h would give 9.3 min, L2).",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-11", "status": "active", "type": "uav.unknown", "count": 1,
+        "pos": {"lat": 50.174, "lon": 36.725, "r_km": 2}, "heading": {"deg": 240, "pm": 20}, "speed_kmh": 600,
+        "conf": 0.6, "src_n": 2, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L3"}
+    },
+    {
+      "id": "eta-dest-kharkiv-l2",
+      "rules": ["eta.l2", "approach.dest"],
+      "description": "Three Shaheds 30 km north-west, no heading, stated destination Kharkiv (r 12 km). The user is 11 km from Kharkiv's centre, inside its radius, so they count as approaching: 27 km at 180 km/h = 9.0 min → L2.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-12", "status": "active", "type": "uav.geran_2", "count": 3,
+        "pos": {"lat": 50.273, "lon": 36.149, "r_km": 3},
+        "dest": {"id": "hromada.kharkiv", "lat": 49.993, "lon": 36.230, "r_km": 12},
+        "conf": 0.7, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "eta-dest-chuhuiv-l1",
+      "rules": ["eta.oblast", "approach.dest"],
+      "description": "Shahed 30 km east, no heading, stated destination Chuhuiv (r 6 km), 44 km from the user. 44 − 6 = 38 km is more than 10 km, so not approaching; in the user's oblast → L1.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-13", "status": "active", "type": "uav.geran_2", "count": 1,
+        "pos": {"lat": 49.992, "lon": 36.773, "r_km": 2},
+        "dest": {"id": "hromada.chuhuiv", "lat": 49.820, "lon": 36.875, "r_km": 6},
+        "conf": 0.7, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L1"}
+    },
+    {
+      "id": "eta-cone-narrow-l1",
+      "rules": ["eta.oblast", "approach.cone"],
+      "description": "Shahed 10 km north-west, heading 170° ± 10°. The user lies at 135° from it, 35° off its heading. The cone is ± max(10°, 25°) = 25°, so not approaching; in the user's oblast → L1.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-14", "status": "active", "type": "uav.geran_2", "count": 1,
+        "pos": {"lat": 50.104, "lon": 36.261, "r_km": 1}, "heading": {"deg": 170, "pm": 10},
+        "conf": 0.7, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L1"}
+    },
+    {
+      "id": "eta-cone-wide-l3",
+      "rules": ["eta.l3", "approach.spread"],
+      "description": "Same Shahed with a wider spread, 170° ± 40°: the user at 35° off-heading is inside the cone. 9 km at 180 km/h = 3.0 min → L3.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-15", "status": "active", "type": "uav.geran_2", "count": 1,
+        "pos": {"lat": 50.104, "lon": 36.261, "r_km": 1}, "heading": {"deg": 170, "pm": 40},
+        "conf": 0.7, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L3"}
+    },
+    {
+      "id": "eta-over-neighbourhood-l4",
+      "rules": ["eta.over"],
+      "description": "«Шахед над Салтівкою»: a track over the user's neighbourhood, no heading → L4.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-16", "status": "active", "type": "uav.geran_2", "count": 1,
+        "pos": {"lat": 50.040, "lon": 36.360, "r_km": 3}, "area": ["nbhd.saltivka"],
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "eta-over-city-l3",
+      "rules": ["eta.over_ladder"],
+      "description": "«Шахед над Харковом»: a track over the user's city (r 12 km), no heading. Proposal: a track's area gets the §6.4 ladder too, so the user's hromada gives L3. ETA rules alone would give L1.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-17", "status": "active", "type": "uav.geran_2", "count": 1,
+        "pos": {"lat": 49.993, "lon": 36.230, "r_km": 12}, "area": ["hromada.kharkiv"],
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L3"}
+    },
+    {
+      "id": "eta-destroyed-l0",
+      "rules": ["status.inactive"],
+      "description": "The Shahed from eta-shahed-5km-l4, now shot down (status destroyed) → L0.",
+      "user": "saltivka",
+      "record": {
+        "kind": "track", "id": "t-eta-01", "status": "destroyed", "type": "uav.geran_2", "count": 1,
+        "pos": {"lat": 50.085, "lon": 36.360, "r_km": 1}, "heading": {"deg": 180, "pm": 20},
+        "conf": 0.8, "src_n": 2, "first_seen": "2026-10-30T21:10:00Z", "last_seen": "2026-10-30T21:14:30Z", "ttl_s": 600
+      },
+      "expect": {"level": "L0"}
+    }
+  ]
+}

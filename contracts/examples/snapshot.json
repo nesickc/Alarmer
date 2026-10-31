@@ -1,0 +1,21 @@
+{
+  "v": 1, "seq": 18350, "ts": "2026-10-30T21:15:00Z", "snapshot": true,
+  "records": [
+    {
+      "kind": "track", "id": "t-7f3a", "status": "active", "type": "uav.geran_3", "count": 1,
+      "pos": {"lat": 50.03, "lon": 36.33, "r_km": 4}, "heading": {"deg": 250, "pm": 30}, "speed_kmh": 400,
+      "dest": {"id": "UA63120270010096220", "lat": 49.99, "lon": 36.23, "r_km": 12},
+      "conf": 0.7, "src_n": 2, "first_seen": "2026-10-30T21:09:40Z", "last_seen": "2026-10-30T21:14:50Z", "ttl_s": 600
+    },
+    {
+      "kind": "area", "id": "a-91c0", "status": "active", "type": "kab", "count": 3,
+      "area": ["raion.kharkiv"],
+      "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:12:10Z", "last_seen": "2026-10-30T21:12:10Z", "ttl_s": 900
+    },
+    {
+      "kind": "official_alert", "id": "o-63", "status": "active", "area": ["oblast.kharkiv"],
+      "reason": {"kind": "track", "type": "uav.geran_3", "launch_area": null},
+      "conf": 1.0, "src_n": 1, "first_seen": "2026-10-30T21:05:00Z", "last_seen": "2026-10-30T21:15:00Z", "ttl_s": 3600
+    }
+  ]
+}

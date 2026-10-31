@@ -1,0 +1,27 @@
+{
+  "description": "Level-engine parameters the golden vectors assume: the initial values from spec §6 (calibrated in plan Stage 5). Type keys match the most specific entry first: exact type, then 'class.*', then '*'.",
+  "speed_kmh": {
+    "uav.*": 180,
+    "uav.geran_3": 350,
+    "cruise.*": 800,
+    "cruise.banderol": 600,
+    "cruise.kh22": 3600,
+    "cruise.tsirkon": 6000,
+    "ballistic.*": 6000,
+    "unknown.fast": 6000,
+    "*": 800
+  },
+  "eta": {
+    "bands_min": {"L4": 2, "L3": 5, "L2": 15},
+    "cone_min_half_angle_deg": 25,
+    "dest_margin_km": 10
+  },
+  "ballistic": {
+    "nationwide_threat_types": ["aviation.mig31k"],
+    "range_km": 550,
+    "fallback_launch_area": "launch.border_occupied",
+    "target_radius_km": 50,
+    "corridor_half_angle_deg": 20,
+    "corridor_beyond_target_km": 150
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "description": "Fixture world for the golden vectors: a few areas, launch areas and users. Geometry is deliberately crude and IDs are readable stand-ins for КАТОТТГ codes. It tests the level rules, not the gazetteer. Polygons are GeoJSON ([lon, lat], one ring, no holes).",
+  "areas": [
+    {
+      "id": "oblast.kharkiv", "name": "Харківська область", "level": "oblast", "parent": null,
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [35.00, 50.15], [35.20, 49.50], [35.60, 48.90], [36.30, 48.55], [37.20, 48.70], [37.80, 49.10],
+        [38.20, 49.60], [38.00, 50.05], [37.50, 50.35], [37.00, 50.36], [36.60, 50.33], [36.20, 50.33],
+        [35.80, 50.40], [35.55, 50.40], [35.00, 50.15]
+      ]]}
+    },
+    {
+      "id": "oblast.kyiv_city", "name": "м. Київ", "level": "oblast", "parent": null,
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [30.24, 50.21], [30.83, 50.21], [30.83, 50.59], [30.24, 50.59], [30.24, 50.21]
+      ]]}
+    },
+    {
+      "id": "oblast.lviv", "name": "Львівська область", "level": "oblast", "parent": null,
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [22.90, 48.70], [25.30, 48.70], [25.30, 50.60], [22.90, 50.60], [22.90, 48.70]
+      ]]}
+    },
+    {"id": "oblast.sumy", "name": "Сумська область", "level": "oblast", "parent": null},
+    {
+      "id": "raion.kharkiv", "name": "Харківський район", "level": "raion", "parent": "oblast.kharkiv",
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [35.80, 50.40], [35.75, 49.75], [36.20, 49.60], [36.60, 49.70], [36.75, 50.00], [36.60, 50.33],
+        [36.20, 50.33], [35.80, 50.40]
+      ]]}
+    },
+    {
+      "id": "raion.chuhuiv", "name": "Чугуївський район", "level": "raion", "parent": "oblast.kharkiv",
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [36.20, 49.60], [36.40, 49.30], [37.20, 49.30], [37.20, 50.00], [36.75, 50.00], [36.60, 49.70],
+        [36.20, 49.60]
+      ]]}
+    },
+    {
+      "id": "hromada.kharkiv", "name": "Харківська громада", "level": "hromada", "parent": "raion.kharkiv",
+      "neighbours": ["hromada.derhachi"],
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [36.10, 49.89], [36.46, 49.89], [36.46, 50.10], [36.10, 50.10], [36.10, 49.89]
+      ]]}
+    },
+    {
+      "id": "hromada.derhachi", "name": "Дергачівська громада", "level": "hromada", "parent": "raion.kharkiv",
+      "neighbours": ["hromada.kharkiv"],
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [35.95, 50.10], [36.25, 50.10], [36.25, 50.25], [35.95, 50.25], [35.95, 50.10]
+      ]]}
+    },
+    {
+      "id": "hromada.chuhuiv", "name": "Чугуївська громада", "level": "hromada", "parent": "raion.chuhuiv",
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [36.75, 49.72], [37.00, 49.72], [37.00, 49.92], [36.75, 49.92], [36.75, 49.72]
+      ]]}
+    },
+    {
+      "id": "district.saltivskyi", "name": "Салтівський район (Харків)", "level": "district",
+      "parent": "hromada.kharkiv",
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [36.28, 50.00], [36.46, 50.00], [36.46, 50.10], [36.28, 50.10], [36.28, 50.00]
+      ]]}
+    },
+    {
+      "id": "district.kholodnohirskyi", "name": "Холодногірський район (Харків)", "level": "district",
+      "parent": "hromada.kharkiv",
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [36.10, 49.95], [36.20, 49.95], [36.20, 50.02], [36.10, 50.02], [36.10, 49.95]
+      ]]}
+    },
+    {
+      "id": "nbhd.saltivka", "name": "Салтівка", "level": "neighbourhood", "parent": "hromada.kharkiv",
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [36.30, 50.01], [36.42, 50.01], [36.42, 50.07], [36.30, 50.07], [36.30, 50.01]
+      ]]}
+    },
+    {
+      "id": "nbhd.kholodna_hora", "name": "Холодна Гора", "level": "neighbourhood", "parent": "hromada.kharkiv",
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [36.13, 49.97], [36.19, 49.97], [36.19, 50.01], [36.13, 50.01], [36.13, 49.97]
+      ]]}
+    }
+  ],
+  "launch_areas": [
+    {
+      "id": "launch.bryansk", "name": "Брянськ",
+      "geometry": {"type": "Point", "coordinates": [34.37, 53.24]},
+      "origin": {"lat": 53.24, "lon": 34.37}
+    },
+    {
+      "id": "launch.belgorod", "name": "Бєлгород",
+      "geometry": {"type": "Point", "coordinates": [36.59, 50.60]},
+      "origin": {"lat": 50.60, "lon": 36.59}
+    },
+    {
+      "id": "launch.crimea", "name": "Крим",
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [33.65, 46.15], [32.50, 45.40], [33.40, 44.60], [33.75, 44.40], [34.40, 44.70], [35.40, 45.00],
+        [36.60, 45.30], [35.10, 45.70], [34.80, 46.10], [33.65, 46.15]
+      ]]},
+      "origin": {"lat": 44.616, "lon": 33.525}
+    },
+    {
+      "id": "launch.border_occupied", "name": "Кордон РФ + окуповані території",
+      "geometry": {"type": "Polygon", "coordinates": [[
+        [31.78, 52.37], [33.20, 52.35], [34.10, 52.20], [34.40, 51.75], [35.30, 51.20], [35.40, 50.75],
+        [35.55, 50.40], [35.80, 50.40], [36.20, 50.33], [36.60, 50.33], [37.00, 50.36], [37.50, 50.35],
+        [37.80, 49.90], [37.75, 49.50], [37.90, 49.05], [38.05, 48.80], [37.90, 48.55], [37.20, 48.30],
+        [37.25, 47.80], [36.30, 47.65], [35.80, 47.45], [35.30, 47.45], [34.50, 47.50], [33.40, 46.78],
+        [32.60, 46.58], [31.50, 46.55], [31.00, 45.80], [32.00, 44.20], [36.00, 44.00], [41.00, 44.00],
+        [41.00, 53.50], [32.50, 53.50], [31.78, 52.37]
+      ]]}
+    }
+  ],
+  "users": [
+    {
+      "id": "saltivka", "name": "Харків, Салтівка", "lat": 50.040, "lon": 36.360,
+      "areas": ["oblast.kharkiv", "raion.kharkiv", "hromada.kharkiv", "district.saltivskyi", "nbhd.saltivka"]
+    },
+    {"id": "berestyn", "name": "Берестин (Харківщина)", "lat": 49.370, "lon": 35.450, "areas": ["oblast.kharkiv"]},
+    {"id": "kyiv", "name": "Київ", "lat": 50.450, "lon": 30.523, "areas": ["oblast.kyiv_city"]},
+    {"id": "vinnytsia", "name": "Вінниця", "lat": 49.233, "lon": 28.468, "areas": []},
+    {"id": "dnipro", "name": "Дніпро", "lat": 48.465, "lon": 35.046, "areas": []},
+    {"id": "lviv", "name": "Львів", "lat": 49.840, "lon": 24.030, "areas": ["oblast.lviv"]}
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "description": "Spec §6.4: area threats (КАБ and other area-only threats), levelled by how close the named area is to the user's own areas.",
+  "vectors": [
+    {
+      "id": "kab-on-neighbourhood-l4",
+      "rules": ["area.local"],
+      "description": "«КАБ на Салтівку»: the user's neighbourhood → L4.",
+      "user": "saltivka",
+      "record": {
+        "kind": "area", "id": "a-kab-01", "status": "active", "type": "kab", "area": ["nbhd.saltivka"],
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "kab-on-district-l4",
+      "rules": ["area.local"],
+      "description": "«КАБ на Салтівський район»: the user's district → L4.",
+      "user": "saltivka",
+      "record": {
+        "kind": "area", "id": "a-kab-02", "status": "active", "type": "kab", "area": ["district.saltivskyi"],
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L4"}
+    },
+    {
+      "id": "kab-on-city-l3",
+      "rules": ["area.hromada"],
+      "description": "«КАБ на Харків»: the user's hromada → L3.",
+      "user": "saltivka",
+      "record": {
+        "kind": "area", "id": "a-kab-03", "status": "active", "type": "kab", "count": 2, "area": ["hromada.kharkiv"],
+        "conf": 0.8, "src_n": 2, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L3"}
+    },
+    {
+      "id": "kab-on-other-district-l3",
+      "rules": ["area.hromada"],
+      "description": "«КАБ на Холодну Гору»: another district of the user's city. An area inside the user's hromada but outside their own district or neighbourhood counts as the hromada → L3.",
+      "user": "saltivka",
+      "record": {
+        "kind": "area", "id": "a-kab-04", "status": "active", "type": "kab", "area": ["district.kholodnohirskyi"],
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L3"}
+    },
+    {
+      "id": "kab-on-own-raion-l2",
+      "rules": ["area.raion"],
+      "description": "«КАБи на Харківський район»: a raion that contains the user's hromada. §6.4 has no row for it. Proposal: L2, like a neighbouring hromada.",
+      "user": "saltivka",
+      "record": {
+        "kind": "area", "id": "a-kab-05", "status": "active", "type": "kab", "area": ["raion.kharkiv"],
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "kab-on-neighbour-hromada-l2",
+      "rules": ["area.neighbour"],
+      "description": "«КАБ на Дергачі»: a hromada bordering the user's → L2.",
+      "user": "saltivka",
+      "record": {
+        "kind": "area", "id": "a-kab-06", "status": "active", "type": "kab", "area": ["hromada.derhachi"],
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "kab-on-far-hromada-l1",
+      "rules": ["area.oblast"],
+      "description": "«КАБ на Чугуїв»: a hromada elsewhere in the user's oblast, not bordering theirs → L1.",
+      "user": "saltivka",
+      "record": {
+        "kind": "area", "id": "a-kab-07", "status": "active", "type": "kab", "area": ["hromada.chuhuiv"],
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L1"}
+    },
+    {
+      "id": "kab-on-oblast-l1",
+      "rules": ["area.oblast"],
+      "description": "«КАБи на Харківщину»: the whole oblast, no finer place → L1.",
+      "user": "saltivka",
+      "record": {
+        "kind": "area", "id": "a-kab-08", "status": "active", "type": "kab", "area": ["oblast.kharkiv"],
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L1"}
+    },
+    {
+      "id": "kab-on-other-oblast-l0",
+      "rules": ["area.none"],
+      "description": "«КАБи на Сумщину»: another oblast → L0.",
+      "user": "saltivka",
+      "record": {
+        "kind": "area", "id": "a-kab-09", "status": "active", "type": "kab", "area": ["oblast.sumy"],
+        "conf": 0.8, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L0"}
+    },
+    {
+      "id": "kab-on-several-l2",
+      "rules": ["area.neighbour", "area.oblast"],
+      "description": "KABs on Chuhuiv and Derhachi in one record: the closest listed area decides, and Derhachi borders the user's hromada → L2.",
+      "user": "saltivka",
+      "record": {
+        "kind": "area", "id": "a-kab-10", "status": "active", "type": "kab", "count": 4,
+        "area": ["hromada.chuhuiv", "hromada.derhachi"],
+        "conf": 0.8, "src_n": 2, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L2"}
+    },
+    {
+      "id": "shahed-area-on-city-l3",
+      "rules": ["area.other_type", "area.hromada"],
+      "description": "Shaheds reported over Kharkiv with no point position: other area-only threats follow the KAB ladder, so the user's hromada → L3.",
+      "user": "saltivka",
+      "record": {
+        "kind": "area", "id": "a-uav-01", "status": "active", "type": "uav.geran_2", "count": 3,
+        "area": ["hromada.kharkiv"],
+        "conf": 0.7, "src_n": 1, "first_seen": "2026-10-30T21:14:05Z", "last_seen": "2026-10-30T21:14:05Z", "ttl_s": 600
+      },
+      "expect": {"level": "L3"}
+    }
+  ]
+}
